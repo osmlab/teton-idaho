@@ -10,10 +10,20 @@ The second effort is through this OSMLab github repository and corresponding [OS
 
 # Review Data
 
-One of the first steps of a data import project is to review the data that you will be importing.  [Elliott Plack](https://lists.openstreetmap.org/pipermail/talk-us/2016-August/016622.html) provided a great visual view of the data. A subset of the data is shown of [the entire PDF](assets/Idaho.png?raw=true "County of Teton Idaho data PDF").
+One of the first steps of a data import project is to review the data that you will be importing.  [Elliott Plack](https://lists.openstreetmap.org/pipermail/talk-us/2016-August/016622.html) provided a great visual view of the data. A subset of the data is shown of [the entire PDF](assets/Idaho.pdf?raw=true "County of Teton Idaho data PDF") along with two views of the data provided in the shape files.
 
 ![County of Teton Idaho data](assets/Idaho.png?raw=true "County of Teton Idaho data subset")
+
+![County of Teton Idaho address data](assets/TetonCountyAddressesDataTable.png?raw=true "County of Teton Idaho address data")
+
+![County of Teton Idaho road data](assets/TetonCountyRoadsDataTable.png?raw=true "County of Teton Idaho data road data")
 
 # Determine Spatial Reference
 
 http://www.spatialreference.org/ref/epsg/2241/
+
+    select *
+      from spatial_ref_sys
+     where lower(srtext) like '%idaho%';
+ 
+![County of Teton Idaho spatial reference](assets/determine_spatail_ref.png?raw=true "County of Teton Idaho spatial reference")
