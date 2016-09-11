@@ -64,8 +64,8 @@ The primary point of the Determine Spatial Reference section was to figure out w
 
 ![PostGIS Shapefile Importer](assets/run_pg_shape_loader.png?raw=true "start gui shapefile importer")
 
-- You can choose to select one file or all of the files at onece.
-- The Shapefile column is name and location of the file in your operating system of choice.
+- You can choose to select one file or all of the files to perform the import in one step.
+- The Shapefile column is used to provide the file name and location of the file in your operating system of choice.
 - Note the teton schema reference.
 - Note that the Importer lowercased the name.
 - The geom column name is the default used by PostGIS.
@@ -79,3 +79,92 @@ The primary point of the Determine Spatial Reference section was to figure out w
 | TetonCountyCityBoundaries_8_5_16 | teton | tetoncountycityboundaries_8_5_16 | geom | 2241 | Create | | 
 | TetonCountyRoads_8_5_16 | teton | tetoncountyroads_8_5_16 | geom | 2241 | Create | | 
 | TetonCoZIP | teton | tetoncountyzip | geom | 2241 | Create | | 
+
+## OpenStreetMap Key Value Mapping
+
+The processing of mapping data source columns to OSM key/value pairs can start.  The other part of the attribute mapping step is to actually figure out the extent of the data that is usable in OSM. 
+
+### Address Keys
+
+| Source Column | OSM Equivalent | Use? | Comments |
+|---------------|----------------|------|----------|
+| gid | | | |
+| objectid | | | |
+| created | | | |
+| addressid | | | |
+| housenumbe | | | |
+| fk_roadid | | | |
+| labelname | | | |
+| addressjur | | | |
+| community | | | |
+| oldaddress | | | |
+| zipcode | | | |
+| state | | | |
+| sub_unit | | | |
+| | `addr:street` | yes | Parse data from labelname |
+| geom | | | |
+
+### Builing Foot Print Keys
+
+| Source Column | OSM Equivalent | Use? | Comments |
+|---------------|----------------|------|----------|
+| gid | | | |
+| objectid_1 | | | |
+| name | | | |
+| state | | | |
+| verified | | | |
+| shape_star | | | |
+| shape_stle | | | |
+| comments | | | |
+| structure_ | | | |
+| essential_ | | | |
+| fema_const | | | |
+| building_c | | | |
+| shape_st_1 | | | |
+| shape_st_2 | | | |
+| geom | | | |
+
+### City Boundary Keys
+
+| Source Column | OSM Equivalent | Use? | Comments |
+|---------------|----------------|------|----------|
+| gid | | | |
+| objectid | | | |
+| shape_star | | | |
+| shape_stle | | | |
+| juris_name | | | |
+| juris_type | | | |
+| geom | | | |
+
+### County Road Keys
+
+| Source Column | OSM Equivalent | Use? | Comments |
+|---------------|----------------|------|----------|
+| gid | | | |
+| objectid | | | |
+| labelname | | | |
+| surfacetyp | | | |
+| carto_type | | | |
+| classifica | | | |
+| roadjurisd | | | |
+| nameid | | | |
+| openstatus | | | |
+| left_from | | | |
+| right_from | | | |
+| left_to | | | |
+| right_to | | | |
+| shape_stle | | | |
+| geom | | | |
+
+### County Zipcode Keys
+
+| Source Column | OSM Equivalent | Use? | Comments |
+|---------------|----------------|------|----------|
+| gid | | | |
+| objectid | | | |
+| zipcode | | | |
+| name | | | |
+| shape_star | | | |
+| shape_stle | | | |
+| geom | | | |
+
