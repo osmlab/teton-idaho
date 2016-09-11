@@ -1,3 +1,6 @@
+Teton County Import
+===========
+
 # Background
 
 [Martijn van Exel was aproached by Teton County in Idaho](https://lists.openstreetmap.org/pipermail/talk-us/2016-August/016610.html) about providing the county's data to OpenStreetMap, OSM. The offer was to use locally produced, surveyed, and public domain data to improve the same area in OSM. It is believed that the data will reduce complaints from folks getting lost using apps / sites based on OSM data.  A review of the area data in OSM shows an area that was largely unretouched from the [original dave-hansen TIGER import and the balrog-kun street name expansion](http://www.openstreetmap.org/way/13915681/history).
@@ -20,10 +23,17 @@ One of the first steps of a data import project is to review the data that you w
 
 # Determine Spatial Reference
 
-http://www.spatialreference.org/ref/epsg/2241/
 
-    select *
+    select srid, auth_name, auth_srid, srtext, proj4text
       from spatial_ref_sys
-     where lower(srtext) like '%idaho%';
- 
+     where lower(srtext) like '%idaho%'
+    order by srid;
+
+| srid | auth_name | auth_srid | srtext | proj4text |
+|------|-----------|-----------|--------|-----------|
+| 2241 | EPSG | 2241 | PROJCS["NAD83 / Idaho East (ftUS)",GEOGCS["NAD83" ... | +proj=tmerc +lat_0=41.66666666666666 ... |
+| 2242 | EPSG | 2242 | PROJCS["NAD83 / Idaho Central (ftUS)",GEOGCS["NAD83" ... | +proj=tmerc +lat_0=41.66666666666666 ... |
+| 2243 | EPSG | 2243 | PROJCS["NAD83 / Idaho West (ftUS)",GEOGCS["NAD83" ... | +proj=tmerc +lat_0=41.66666666666666 ... |
+| ... | ... | ... | ... | ... |
+
 ![County of Teton Idaho spatial reference](assets/determine_spatail_ref.png?raw=true "County of Teton Idaho spatial reference")
