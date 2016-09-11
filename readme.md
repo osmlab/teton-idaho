@@ -6,7 +6,12 @@
 
 The US OpenStreetMap community is using two efforts to enhance the area.  The [first effort](https://lists.openstreetmap.org/pipermail/talk-us/2016-August/016630.html) was created by Clifford Snow via [the OSM Tasking Manager project #58 - Clean up Roads in Teton County, ID](http://tasks.openstreetmap.us/project/58).  The first effort is a standard [TIGER](http://wiki.openstreetmap.org/wiki/TIGER) [fixup effort](http://wiki.openstreetmap.org/wiki/TIGER_fixup).
 
-The second effort is through this OSMLab github repository and corresponding [OSM wiki import page](http://wiki.openstreetmap.org/wiki/Idaho/Teton_County/imports).  Another goal of the second effort is to provide a step by step way guide showing one way preparing data for import into OSM.
+The second effort is through this OSMLab github repository and corresponding [OSM wiki import page](http://wiki.openstreetmap.org/wiki/Idaho/Teton_County/imports).  Another goal of the second effort is to provide a step by step guide showing one way of preparing data for import into OSM.
+
+# Review Data
+
+One of the first steps of a data import project is to review the data that you will be importing.  [Elliott Plack](https://lists.openstreetmap.org/pipermail/talk-us/2016-August/016622.html) provided a 
+![great visual view](asssets/Idaho.pdf?raw=true "County of Teton Idaho data PDF") of the data.
 
 # Determine Spatial Reference
 
