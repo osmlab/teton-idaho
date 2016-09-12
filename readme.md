@@ -143,7 +143,7 @@ The processing of mapping data source columns to OSM key/value pairs can start. 
 | gid | | | |
 | objectid | | | |
 | labelname | `addr:street`  | yes | The values may help with parsing of the street name components before they are merged into the final OSM  `addr:street` value.  |
-| surfacetyp | surface | yes | There's the chance of translating Idaho's surface value to a corresponding OSM value. |
+| surfacetyp | `surface` | yes | There's the chance of translating Idaho's surface value to a corresponding OSM value. |
 | carto_type | | | |
 | classifica | | | |
 | roadjurisd | | | |
@@ -170,6 +170,8 @@ The processing of mapping data source columns to OSM key/value pairs can start. 
 
 ### Poke at the data
 
+One of the processes that you will have to go through is evaluating the data.  For example, the fk_roadid provides a clue that we may be able to parse the road table labelname and use this as way to expand the address data name.  The reason for all this effort is that OSM prefers the expanded street name over the abbreviated name.
+
     select addr.gid as agid, addr.objectid as aoid,
            roads.gid as rgid, roads.objectid as roid,
            addr.created, addr.addressid,
@@ -186,3 +188,12 @@ The processing of mapping data source columns to OSM key/value pairs can start. 
            addr.geom as ageom, roads.geom as rdgeom
       from teton.tetoncountyaddresses_8_11_16 as addr
       join teton.tetoncountyroads_8_5_16 as roads on nameid = fk_roadid;
+
+Examining the result set shows that this approach will not pan out in the end.  For some reason an address like Grizzly Lane is mapped to Ski Hill Road.
+
+| ... | nameid | fk_roadid | alabelname | rdlablename | ... |
+|-----|--------|-----------|----------------|----------------|-----|
+| ... | 334 | 334 | 948 Grizzly Ln | Ski Hill Rd | ... |
+
+What we do see in some of this review is that we will need to expand the street names so that we can map the `surfacetyp` column to the OSM `surface` tag in addition to the street name expansion of the address data.
+
