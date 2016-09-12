@@ -87,31 +87,30 @@ The processing of mapping data source columns to OSM key/value pairs can start. 
 ### Address Keys
 
 | Source Column | OSM Equivalent | Use? | Comments |
-|---------------|----------------|------|----------|
-| gid | | | |
-| objectid | | | |
-| created | | | |
-| addressid | | | |
-| housenumbe | | | |
-| fk_roadid | | | |
-| labelname | | | |
+|---------------|--------------------|------|----------------------------------------------------------------------|
+| gid | | no | |
+| objectid | | no | |
+| created | | no | |
+| addressid | | no | |
+| housenumbe | `addr:housenumber` | yes | |
+| fk_roadid | | no | The fk, or foreign key roadid can be used to compare address street names with the road names. |
+| labelname | `addr:street` | yes | Both the OSM `addr:housenumber` and `addr:street` data are in this column. |
 | addressjur | | | |
 | community | | | |
 | oldaddress | | | |
-| zipcode | | | |
-| state | | | |
+| zipcode | `addr:postcode` | | |
+| state | `addr:state` | | |
 | sub_unit | | | |
-| | `addr:street` | yes | Parse data from labelname |
 | geom | | | |
 
 ### Builing Foot Print Keys
 
 | Source Column | OSM Equivalent | Use? | Comments |
-|---------------|----------------|------|----------|
+|---------------|--------------------|------|----------------------------------------------------------------------|
 | gid | | | |
 | objectid_1 | | | |
 | name | | | |
-| state | | | |
+| state | `addr:state` | yes | |
 | verified | | | |
 | shape_star | | | |
 | shape_stle | | | |
@@ -127,7 +126,7 @@ The processing of mapping data source columns to OSM key/value pairs can start. 
 ### City Boundary Keys
 
 | Source Column | OSM Equivalent | Use? | Comments |
-|---------------|----------------|------|----------|
+|---------------|--------------------|------|----------------------------------------------------------------------|
 | gid | | | |
 | objectid | | | |
 | shape_star | | | |
@@ -139,32 +138,51 @@ The processing of mapping data source columns to OSM key/value pairs can start. 
 ### County Road Keys
 
 | Source Column | OSM Equivalent | Use? | Comments |
-|---------------|----------------|------|----------|
+|---------------|--------------------|------|----------------------------------------------------------------------|
+| left_from     | `addr:housenumber` | 
 | gid | | | |
 | objectid | | | |
-| labelname | | | |
-| surfacetyp | | | |
+| labelname | `addr:street`  | yes | The values may help with parsing of the street name components before they are merged into the final OSM  `addr:street` value.  |
+| surfacetyp | surface | yes | There's the chance of translating Idaho's surface value to a corresponding OSM value. |
 | carto_type | | | |
 | classifica | | | |
 | roadjurisd | | | |
 | nameid | | | |
 | openstatus | | | |
-| left_from | | | |
-| right_from | | | |
-| left_to | | | |
-| right_to | | | |
+| left_from | `addr:housenumber` | yes | The values may help with parsing of the street number components as a validation `addr:housenumber` value. |
+| right_from | `addr:housenumber` | yes | The values may help with parsing of the street number components as a validation `addr:housenumber` value. |
+| left_to | `addr:housenumber` | yes | The values may help with parsing of the street number components as a validation `addr:housenumber` value. |
+| right_to | `addr:housenumber` | yes | The values may help with parsing of the street number components as a validation `addr:housenumber` value. |
 | shape_stle | | | |
 | geom | | | |
 
 ### County Zipcode Keys
 
 | Source Column | OSM Equivalent | Use? | Comments |
-|---------------|----------------|------|----------|
+|---------------|--------------------|------|----------------------------------------------------------------------|
 | gid | | | |
 | objectid | | | |
-| zipcode | | | |
+| zipcode | `addr:postcode` | | |
 | name | | | |
 | shape_star | | | |
 | shape_stle | | | |
 | geom | | | |
 
+### Poke at the data
+
+    select addr.gid as agid, addr.objectid as aoid,
+           roads.gid as rgid, roads.objectid as roid,
+           addr.created, addr.addressid,
+           roads.left_from, roads.left_to,
+           roads.right_from, roads.right_to,
+           addr.housenumbe,
+           roads.nameid, addr.fk_roadid,
+           addr.labelname as alabelname, roads.labelname as rdlabelname,
+           addr.zipcode, addr.state,
+           addr.addressjur, addr.community, addr.oldaddress,
+           addr.sub_unit, roads.surfacetyp,
+           roads.carto_type, roads.classifica, roads.roadjurisd,
+           roads.openstatus, roads.shape_stle,
+           addr.geom as ageom, roads.geom as rdgeom
+      from teton.tetoncountyaddresses_8_11_16 as addr
+      join teton.tetoncountyroads_8_5_16 as roads on nameid = fk_roadid;
