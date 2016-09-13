@@ -54,7 +54,7 @@ The data table presented only shows the three relavant rows of the 21 rows retur
 
 ![County of Teton Idaho spatial reference](assets/determine_spatail_ref.png?raw=true "County of Teton Idaho spatial reference")
 
-The [.prj](http://www.spatialreference.org/ref/epsg/2241/prj/ "Spatial Reference .org .prj link") file from [Spatial Reference .org](http://www.spatialreference.org/ref/epsg/2241/ "Spatial Reference .org EPSG code 2241") and the [.prj of the address source](data/TetonCountyAddresses_8_11_16?raw=true "Spatial Reference .org .prj link") data have been reformatted to show the minor differences between the two files.
+The [.prj](http://www.spatialreference.org/ref/epsg/2241/prj/ "Spatial Reference .org .prj link") file from [Spatial Reference .org](http://www.spatialreference.org/ref/epsg/2241/ "Spatial Reference .org EPSG code 2241") and the [.prj of the address source](data/TetonAddressRevised_9_12_2016?raw=true "Spatial Reference .org .prj link") data have been reformatted to show the minor differences between the two files.
 
 - We can ignore the descriptive text field spelling varations.
 - We can raise our eyebrows in concern over some of the numerical variations.
@@ -77,7 +77,7 @@ The primary point of the Determine Spatial Reference section was to figure out w
 
 | Shapefile | Schema | Table | Geo Column | SRID | Mode   | Rm |
 |-----------|--------|-------|------------|------|--------|----|
-| TetonCountyAddresses_8_11_16 | teton | tetoncountyaddresses_8_11_16 | geom | 2241 | Create | | 
+| TetonAddressRevised_9_12_2016 | teton | tetonaddressrevised_9_12_2016 | geom | 2241 | Create | | 
 | TetonCountyBuildingFootprints_8_5_16 | teton | tetoncountybuildingfootprints_8_5_16 | geom | 2241 | Create | | 
 | TetonCountyCityBoundaries_8_5_16 | teton | tetoncountycityboundaries_8_5_16 | geom | 2241 | Create | | 
 | TetonCountyRoads_8_5_16 | teton | tetoncountyroads_8_5_16 | geom | 2241 | Create | | 
@@ -189,7 +189,7 @@ One of the processes that you will have to go through is evaluating the data.  F
            roads.carto_type, roads.classifica, roads.roadjurisd,
            roads.openstatus, roads.shape_stle,
            addr.geom as ageom, roads.geom as rdgeom
-      from teton.tetoncountyaddresses_8_11_16 as addr
+      from teton.tetonaddressrevised_9_12_2016 as addr
       join teton.tetoncountyroads_8_5_16 as roads on nameid = fk_roadid;
 
 Examining the result set shows that this approach will not pan out in the end.  For some reason an address like Grizzly Lane is mapped to Ski Hill Road.
