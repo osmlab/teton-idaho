@@ -87,31 +87,33 @@ The primary point of the Determine Spatial Reference section was to figure out w
 
 The processing of mapping data source columns to OSM key/value pairs can start.  The other part of the attribute mapping step is to actually figure out the extent of the data that is usable in OSM. 
 
+Note that all the column names are 10 characters or less. The [.dbf](https://en.wikipedia.org/wiki/.dbf) file is actually a [dBaseIII](https://en.wikipedia.org/wiki/DBase) formatted database file.  The dBase system originated in the late 1970's when storage space was limited. The constrained column names hail back to that time period.  The bright side to this [.dbf](https://en.wikipedia.org/wiki/.dbf) file format in the shape file system of files is that you can open the [.dbf](https://en.wikipedia.org/wiki/.dbf) file with OpenOffice or the more active [LibreOffice](https://www.libreoffice.org/) office productivity suite project.  The file formats presented are after the [.dbf](https://en.wikipedia.org/wiki/.dbf) file has been loaded into a PostGIS enabled PostgreSQL database.  The gid and geom columns are added by the loader.  You will not see thse columns if you look at the [.dbf](https://en.wikipedia.org/wiki/.dbf) file in [LibreOffice](https://www.libreoffice.org/).
+
 ### Address Keys
 
 | Source Column | OSM Equivalent | Use? | Comments |
 |---------------|--------------------|------|----------------------------------------------------------------------|
-| gid | | no | |
-| objectid | | no | |
-| created | | no | |
-| addressid | | no | |
+| gid | | no | Primary key column created by the PostGIS Shapefile and DBF loader. |
+| objectid | | no | Primary key from the shapefile. |
+| created | | no | The created column is just a date column tracking the creation process. |
+| addressid | | no | The objectid is the shape file primary key.  The addressid is the actual business system key id column. The column may be useful if Teton County were to actuall maintain the OSM data too. |
 | housenumbe | `addr:housenumber` | yes | |
 | fk_roadid | | no | The fk, or foreign key roadid can be used to compare address street names with the road names. |
-| labelname | `addr:street` | yes | Both the OSM `addr:housenumber` and `addr:street` data are in this column. |
+| labelname | `addr:street` | yes | Both the OSM `addr:housenumber` and `addr:street` data are in this column. That means we'll have to extract the two OSM attributes and clean the data up before it can be imported into OSM. |
 | addressjur | | | |
 | community | | | |
 | oldaddress | | | |
 | zipcode | `addr:postcode` | | |
 | state | `addr:state` | | |
 | sub_unit | | | |
-| geom | | | |
+| geom | `lat` `lon` | yes | The geometry column will be used to create the final longitude and latitude columns used by OSM. |
 
-### Builing Foot Print Keys
+### Building Foot Print Keys
 
 | Source Column | OSM Equivalent | Use? | Comments |
 |---------------|--------------------|------|----------------------------------------------------------------------|
-| gid | | | |
-| objectid_1 | | | |
+| gid | | no | Primary key column created by the PostGIS Shapefile and DBF loader. |
+| objectid_1 | | no | Primary key from the shapefile. |
 | name | | | |
 | state | `addr:state` | yes | |
 | verified | | | |
@@ -124,27 +126,27 @@ The processing of mapping data source columns to OSM key/value pairs can start. 
 | building_c | | | |
 | shape_st_1 | | | |
 | shape_st_2 | | | |
-| geom | | | |
+| geom | `lat` `lon` | yes | The geometry column will be used to create the final longitude and latitude columns used by OSM. |
 
 ### City Boundary Keys
 
 | Source Column | OSM Equivalent | Use? | Comments |
 |---------------|--------------------|------|----------------------------------------------------------------------|
-| gid | | | |
-| objectid | | | |
+| gid | | no | Primary key column created by the PostGIS Shapefile and DBF loader. |
+| objectid | | no | Primary key from the shapefile. |
 | shape_star | | | |
 | shape_stle | | | |
 | juris_name | | | |
 | juris_type | | | |
-| geom | | | |
+| geom | `lat` `lon` | yes | The geometry column will be used to create the final longitude and latitude columns used by OSM. |
 
 ### County Road Keys
 
 | Source Column | OSM Equivalent | Use? | Comments |
 |---------------|--------------------|------|----------------------------------------------------------------------|
 | left_from     | `addr:housenumber` | 
-| gid | | | |
-| objectid | | | |
+| gid | | no | Primary key column created by the PostGIS Shapefile and DBF loader. |
+| objectid | | no | Primary key from the shapefile. |
 | labelname | `addr:street`  | yes | The values may help with parsing of the street name components before they are merged into the final OSM  `addr:street` value.  |
 | surfacetyp | `surface` | yes | There's the chance of translating Idaho's surface value to a corresponding OSM value. |
 | carto_type | | | |
@@ -157,19 +159,19 @@ The processing of mapping data source columns to OSM key/value pairs can start. 
 | left_to | `addr:housenumber` | yes | The values may help with parsing of the street number components as a validation `addr:housenumber` value. |
 | right_to | `addr:housenumber` | yes | The values may help with parsing of the street number components as a validation `addr:housenumber` value. |
 | shape_stle | | | |
-| geom | | | |
+| geom | `lat` `lon` | yes | The geometry column will be used to create the final longitude and latitude columns used by OSM. |
 
 ### County Zipcode Keys
 
 | Source Column | OSM Equivalent | Use? | Comments |
 |---------------|--------------------|------|----------------------------------------------------------------------|
-| gid | | | |
-| objectid | | | |
+| gid | | no | Primary key column created by the PostGIS Shapefile and DBF loader. |
+| objectid | | no | Primary key from the shapefile. |
 | zipcode | `addr:postcode` | | |
 | name | | | |
 | shape_star | | | |
 | shape_stle | | | |
-| geom | | | |
+| geom | `lat` `lon` | yes | The geometry column will be used to create the final longitude and latitude columns used by OSM. |
 
 ### Poke at the data
 
@@ -200,6 +202,9 @@ Examining the result set shows that this approach will not pan out in the end.  
 
 What we do see in some of this review is that we will need to expand the street names so that we can map the `surfacetyp` column to the OSM `surface` tag in addition to the street name expansion of the address data.
 
-Teton County came back with, "Joining the addresses to the road name table (via FKROADID>NAMEID) will likely bring a bunch of errors to light as well. The county readdressed almost everybody about 8 years ago, and they also got in the bad habit of pre-assigning addresses before structures went in, meaning that often the physical road access for completed structures differed from the originally assigned address (especially for houses on a corner). In the process of changing the address, techs sometimes neglected to update the FKROAD ID field in the address layer. I did correct the Grizzly Lane address record. Yes, it should be married to Grizzly Lane. That’s an example of an address that was once based on Ski Hill Rd, but when a second home went in, the driveway became a named road (Grizzly Ln) and the association should have changed from Ski Hill Road to Grizzly."
+Teton County came back with, "Joining the addresses to the road name table (via FKROADID>NAMEID) will likely bring a bunch of errors to light as well. The county readdressed almost everybody about 8 years ago, and they also got in the bad habit of pre-assigning addresses before structures went in, meaning that often the physical road access for completed structures differed from the originally assigned address (especially for houses on a corner). In the process of changing the address, techs sometimes neglected to update the FKROAD ID field in the address layer. I did correct the Grizzly Lane address record. Yes, it should be married to Grizzly Lane. That's an example of an address that was once based on Ski Hill Rd, but when a second home went in, the driveway became a named road (Grizzly Ln) and the association should have changed from Ski Hill Road to Grizzly."
 
- [The 01_teton_name_diffs.sql](sql/01_teton_name_diffs.sql?raw=true "name difference SQL script") script was used to assist Teton County with these update anomolies.
+[The 01_teton_name_diffs.sql](sql/01_teton_name_diffs.sql?raw=true "name difference SQL script") script was used to assist Teton County with these update anomalies.
+
+## Prepare Data For OpenStreetMap
+
