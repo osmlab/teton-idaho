@@ -200,3 +200,6 @@ Examining the result set shows that this approach will not pan out in the end.  
 
 What we do see in some of this review is that we will need to expand the street names so that we can map the `surfacetyp` column to the OSM `surface` tag in addition to the street name expansion of the address data.
 
+Teton County came back with, "Joining the addresses to the road name table (via FKROADID>NAMEID) will likely bring a bunch of errors to light as well. The county readdressed almost everybody about 8 years ago, and they also got in the bad habit of pre-assigning addresses before structures went in, meaning that often the physical road access for completed structures differed from the originally assigned address (especially for houses on a corner). In the process of changing the address, techs sometimes neglected to update the FKROAD ID field in the address layer. I did correct the Grizzly Lane address record. Yes, it should be married to Grizzly Lane. That’s an example of an address that was once based on Ski Hill Rd, but when a second home went in, the driveway became a named road (Grizzly Ln) and the association should have changed from Ski Hill Road to Grizzly."
+
+ [The 01_teton_name_diffs.sql](sql/01_teton_name_diffs.sql?raw=true "name difference SQL script") script was used to assist Teton County with these update anomolies.
