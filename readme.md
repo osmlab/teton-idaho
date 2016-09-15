@@ -208,3 +208,12 @@ Teton County came back with, "Joining the addresses to the road name table (via 
 
 ## Prepare Data For OpenStreetMap
 
+Teton County covers many of the U.S. addressing traits.  The table provides an examination of some of the data.  The table reveals our strategy:  we need to nibble off pieces of information on each side of the address string.  Just as an ornithologist becomes an ornithologist by learning bird after bird, we'll trim off data piece by piece.  Once the address data is ready, then we can worry about conflating the address data with the building data.
+
+| labelname | OSM Label | Comments |
+|-----------------------------|-------------------------------|----------------------------------------------------------------------|
+| 9948 S 1000 W | 9948 South 1000 West | The address requires expansion of both the prefix direction and postfix direction. |
+| 10220 Woolstenhulme Way | 10220 Woolstenhulme Way | The address will be untouched other than separation of the number from the address name. |
+| 1950 Leigh Creek Estates Rd | 1950 Leigh Creek Estates Road | The address type, Rd, needs to be expanded.  The main address name, Leigh Creak Estates, has multiple spaces in the name. |
+| 3031 Central Ave  Unit #1 | 3031 Central Avenue Unit 1 | The address type, Ave, needs to be expanded.  The address also contains a suite/flat number that will be put in a separate field. |
+| 253 Warbird Ln  #2-1 | 253 Warbird Lane 2-1 | The address type, Ln, needs to be expanded.  The address also contains a suite/flat number that will be put in a separate field. This version of the suite/flat number does not have a Unit or Apartment designation in front of the number. |
