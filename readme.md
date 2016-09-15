@@ -61,6 +61,14 @@ The [.prj](http://www.spatialreference.org/ref/epsg/2241/prj/ "Spatial Reference
 
 The variations are rounding as such small increments of measure that the differences should not impact the data accuracy. Consider `0.0174532925199433 verses 0.017453292519943295` and the fact that OSM only stores seven places after the decimal point.  These minuscule differences will not impact the quality of the import.  The small differences show that we have located the correct [EPSG code of 2241](http://www.spatialreference.org/ref/epsg/2241/ "Spatial Reference .org EPSG code 2241").
 
+Finally, Teton County provided a screen shot of the spatial properties that they use.
+
+![Teton County spatial reference screen shot.](assets/teton_spatial_properties.png?raw=true "Teton County spatial reference screen shot.")
+
+In the picture that was provided the EPSG number is in the "Current coordinate system:" box.  The "Authority" is the European Petroleum Survey Group, EPSG.  The "WKID", Well Known ID, or Spatial Reference ID is 2241.  A person can spend a life time of GIS editing without noticing this kind-of data, if someone else set up the system of editing and transforming data in and out of the system is not required.  The nice thing about this picture is that it also confirms the selection of the SRID for PostGIS.
+
+Locating and using the correct SRID is an important step. Otherwise, data transformations will send your data to an entirely different place on the planet.  One of the locations that you might find your data without the correct SRID is at [Null Island](https://en.wikipedia.org/wiki/Null_Island).  The reason that the data would move to Null Island without the correct SRID is that the origin of the data would move from -112.1666666666667 degrees west, 41.66666666666666 degrees north to 0 degrees east, 0 degrees north. 0, 0 are coordinates of Null Island.
+
 ## PostGIS Shapefile Importer
 
 The primary point of the Determine Spatial Reference section was to figure out what would be the spatial reference ID, SRID, for the PostGIS shapefile importer.  The other step that was not shown was the [creation of the teton schema](sql/00_schema.sql?raw=true "create teton schema SQL script"). The schema provides you one way to organize the data that you will be processing.  The GUI version of the Shapefile Importer is located on the puzzle piece drop down list.  The schema and SRID are used to import the data.
@@ -211,7 +219,7 @@ Teton County came back with, "Joining the addresses to the road name table (via 
 Teton County covers many of the U.S. addressing traits.  The table provides an examination of some of the data.  The table reveals our strategy:  we need to nibble off pieces of information on each side of the address string.  Just as an ornithologist becomes an ornithologist by learning bird after bird, we'll trim off data piece by piece.  Once the address data is ready, then we can worry about conflating the address data with the building data.
 
 | labelname | OSM Label | Comments |
-|-----------------------------|-------------------------------|----------------------------------------------------------------------|
+|----------------------------------|------------------------------------|------------------------------------------------------------|
 | 9948 S 1000 W | 9948 South 1000 West | The address requires expansion of both the prefix direction and postfix direction. |
 | 10220 Woolstenhulme Way | 10220 Woolstenhulme Way | The address will be untouched other than separation of the number from the address name. |
 | 1950 Leigh Creek Estates Rd | 1950 Leigh Creek Estates Road | The address type, Rd, needs to be expanded.  The main address name, Leigh Creak Estates, has multiple spaces in the name. |
